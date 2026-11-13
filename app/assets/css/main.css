@@ -1,0 +1,44 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: Rubik, 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-logo: 'Lilita One', ui-sans-serif, system-ui, sans-serif;
+  --desktop-width: 100rem;
+  --text-sm: 1rem;
+  --text-sm--line-height: calc(1.25 / 1);
+  --color-canvas: #2C2E30;
+  --color-field: #2c2d2f;
+  --color-portal: #c1f531;
+  --color-ink: #142000;
+  --color-pool: #1a3338;
+  --color-pool-soft: #23464c;
+  --color-lagoon: #0AD7F1;
+  --color-mist: #9aa3a6;
+  --color-alive: #5dde6a;
+  --color-dead: #e5534b;
+  --color-unknown: #9aa0a6;
+  --color-thumb: #505155;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    background: var(--color-canvas);
+    scrollbar-color: #3a3a3a var(--color-canvas);
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--color-canvas);
+    color: white;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  input[type='search']::-webkit-search-cancel-button,
+  input[type='search']::-webkit-search-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+}
