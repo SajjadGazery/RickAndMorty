@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { clearError } from '#imports'
 import type { NuxtError } from '#app'
 
 defineProps<{

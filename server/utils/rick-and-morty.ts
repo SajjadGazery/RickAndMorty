@@ -1,7 +1,4 @@
 import type { Character, CharacterDetail, CharacterList, Episode, LifeStatus, Place } from '#shared/types/rick-and-morty'
-
-const API = 'https://rickandmortyapi.com/api'
-
 interface ApiRef {
   name: string
   url: string
@@ -66,16 +63,20 @@ function idFromUrl(url: string): number | null {
 }
 
 async function api<T>(path: string, query?: Record<string, string | number>): Promise<T> {
+  const { rickAndMortyApi } = useRuntimeConfig()
+
   try {
-    return await $fetch<T>(`${API}${path}`, {
+    return await $fetch<T>(`${rickAndMortyApi}${path}`, {
       query,
       timeout: 8000,
+      retry: 1,
+      retryDelay: 300,
     })
   }
   catch (error) {
-    if (statusOf(error) === 404) {
+    if (statusOf(error) === 404)
       throw createError({ statusCode: 404, statusMessage: 'Not found' })
-    }
+
 
     throw createError({
       statusCode: 502,
@@ -178,39 +179,45 @@ async function loadLocations(character: ApiCharacter): Promise<Place[]> {
   })
 }
 
-export async function getCharacterPage(page: number, name: string): Promise<CharacterList> {
-    try {
-      const response = await api<ApiList<ApiCharacter>>('/character', {
-        page,
-        ...(name ? { name } : {}),
-      })
-
-      return {
-        info: {
-          count: response.info?.count ?? 0,
-          pages: response.info?.pages ?? 0,
-        },
-        results: (response.results ?? []).map(toCharacter),
-      }
-    }
-    catch (error) {
-      if (statusOf(error) === 404)
-        return { info: { count: 0, pages: 0 }, results: [] }
-
-      throw error
-    }
+function toList(response: ApiList<ApiCharacter>): CharacterList {
+  return {
+    info: {
+      count: response.info?.count ?? 0,
+      pages: response.info?.pages ?? 0,
+    },
+    results: (response.results ?? []).map(toCharacter),
+  }
 }
 
-export async function getCharacterDetail(id: number): Promise<CharacterDetail> {
-    const character = await api<ApiCharacter>(`/character/${id}`)
-    const [episodes, locations] = await Promise.all([
-      loadEpisodes(character.episode),
-      loadLocations(character),
-    ])
+export async function getCharacterPage(page: number, name: string): Promise<CharacterList> {
+  const query = { page, ...(name ? { name } : {}) }
 
-    return {
-      character: toCharacter(character),
-      episodes,
-      locations,
+  try {
+    return toList(await api<ApiList<ApiCharacter>>('/character', query))
+  }
+  catch (error) {
+    if (statusOf(error) !== 404)
+      throw error
+    if (page > 1) {
+      const first = await api<ApiList<ApiCharacter>>('/character', { ...query, page: 1 }).catch(() => null)
+
+      if (first)
+        return { ...toList(first), results: [] }
     }
+
+    return { info: { count: 0, pages: 0 }, results: [] }
+  }
+}
+export async function getCharacterDetail(id: number): Promise<CharacterDetail> {
+  const character = await api<ApiCharacter>(`/character/${id}`)
+  const [episodes, locations] = await Promise.all([
+    loadEpisodes(character.episode),
+    loadLocations(character),
+  ])
+
+  return {
+    character: toCharacter(character),
+    episodes,
+    locations,
+  }
 }

@@ -3,7 +3,9 @@
   "include": [
     ".nuxt/nuxt.d.ts",
     "app/**/*",
+    "app/**/*.vue",
     "shared/**/*",
+    "shared/**/*.vue",
     "server/**/*",
     "nuxt.config.ts"
   ],

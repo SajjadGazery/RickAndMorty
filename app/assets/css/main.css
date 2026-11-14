@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
 @theme {
-  --font-sans: Rubik, 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'DM Sans', 'DM Sans', ui-sans-serif, system-ui, sans-serif;
   --font-logo: 'Lilita One', ui-sans-serif, system-ui, sans-serif;
   --desktop-width: 100rem;
   --text-sm: 1rem;
@@ -41,4 +41,7 @@
     -webkit-appearance: none;
     appearance: none;
   }
+}
+.nuxt-icon--fill, .nuxt-icon--fill *{
+  fill: revert-layer !important;
 }

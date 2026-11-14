@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from '#imports'
 import { buildPageItems } from '~/utils/pagination'
 
 const props = defineProps<{

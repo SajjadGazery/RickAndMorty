@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed, useRoute } from '#imports'
+
 const route = useRoute()
 const isDetail = computed(() => route.path.startsWith('/characters/'))
 </script>

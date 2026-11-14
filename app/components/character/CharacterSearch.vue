@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { $fetch, navigateTo, onBeforeUnmount, onMounted, ref, useRoute, watch } from '#imports'
 import type { Character, CharacterList } from '#shared/types/rick-and-morty'
 import { readNameQuery } from '#shared/utils/query'
 

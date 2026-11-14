@@ -1,19 +1,9 @@
 <script setup lang="ts">
 import type {Character} from '#shared/types/rick-and-morty'
-import {formatLabel} from '~/utils/format'
 
-const props = defineProps<{
+defineProps<{
   character: Character
 }>()
-
-const facts = computed(() => {
-  const items = [formatLabel(props.character.species), formatLabel(props.character.gender)]
-
-  if (props.character.type.trim())
-    items.push(formatLabel(props.character.type))
-
-  return items
-})
 </script>
 
 <template>
